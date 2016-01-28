@@ -6,7 +6,7 @@ A small PHP utility that takes a url for a Bandcamp album or track page and retu
 
 ## Code Example
 
-JQuery code:
+'''JQuery
 var bandcampUrl = "[...]/bandcampScraper.php?url=https://abdominal.bandcamp.com/track/broken";
 $.getJSON( bandcampUrl, function( bandcampData ) {
   var artist = bandcampData.artist;
@@ -19,6 +19,7 @@ $.getJSON( bandcampUrl, function( bandcampData ) {
     alert("The url resolves but does not contain any track data. ");
   }
 });
+'''
 
 Returns a JSON object with the track's or album's metadata, or some kind of error-like response, if the scraped data isn't in the expected format. The object is simply a JSON representation of the JS object "var TralbumData", which is present on all these pages.
 
