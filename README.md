@@ -6,7 +6,7 @@ A small PHP utility that takes a url for a Bandcamp album or track page and retu
 
 ## Code Example
 
-'''JQuery
+'''
 var bandcampUrl = "[...]/bandcampScraper.php?url=https://abdominal.bandcamp.com/track/broken";
 $.getJSON( bandcampUrl, function( bandcampData ) {
   var artist = bandcampData.artist;
