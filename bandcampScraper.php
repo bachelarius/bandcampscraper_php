@@ -40,24 +40,25 @@
         $line = trim($line);
         //we are ignoring comments and variable declarations, as they
         // are not valid json.
-        if (!startsWith($line,"//") && !startsWith(strtolower($line),"var")){
-            //if the line contains a colon, e.g. artist : "artistName", 
-            // we need to wrap the phrase before the colon with quotes.
-            // TODO: Make this less hacky.
-            if (strpos($line, ":")){
-                $line = preg_replace('/:/', '":', $line, 1);
-                $line = "\"" . $line;
-            }
-            //if the line contains a string concatination, then we need 
-            // to actually concatonate the strings.
-            // TODO: Make this less hacky.
-            if (strpos($line, "\" + \"")){
-                $line = str_replace("\" + \"", "", $line);
-            }
-            
-            // add the line to the final output.
-            $output .= $line;
+        if (startsWith($line,"//") || startsWith(strtolower($line),"var")){
+            continue;
         }
+        //if the line contains a colon, e.g. artist : "artistName", 
+        // we need to wrap the phrase before the colon with quotes.
+        // TODO: Make this less hacky.
+        if (strpos($line, ":")){
+            $line = preg_replace('/:/', '":', $line, 1);
+            $line = "\"" . $line;
+        }
+        //if the line contains a string concatination, then we need 
+        // to actually concatonate the strings.
+        // TODO: Make this less hacky.
+        if (strpos($line, "\" + \"")){
+            $line = str_replace("\" + \"", "", $line);
+        }
+        
+        // add the line to the final output.
+        $output .= $line;
     }
     echo $output;
     
