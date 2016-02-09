@@ -47,6 +47,7 @@
         // we need to wrap the phrase before the colon with quotes.
         // TODO: Make this less hacky.
         if (strpos($line, ":")){
+            $line = preg_replace('/ :/', ':', $line, 1);
             $line = preg_replace('/:/', '":', $line, 1);
             $line = "\"" . $line;
         }
