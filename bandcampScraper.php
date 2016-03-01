@@ -51,6 +51,11 @@
             $line = preg_replace('/:/', '":', $line, 1);
             $line = "\"" . $line;
         }
+        //if the line contains an end of line quote, then remove it. 
+        // Again, this is very hacky...
+        if (strpos($line, ", //")){
+            $line = preg_replace ('/, \/\/(.*)/' , ',' , $line);
+        }
         //if the line contains a string concatination, then we need 
         // to actually concatonate the strings.
         // TODO: Make this less hacky.
