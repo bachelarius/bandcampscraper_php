@@ -1,22 +1,24 @@
 <?php
+// HACK: initialize the WordPress environment, enough to use the Plugin
+require_once( dirname(__FILE__) . '/../../../../wp-load.php' );
 
     $url = htmlspecialchars($_GET["url"]);
     
     if (empty($url)){
-        echo "Welcome to the Bandcamp scraper. <br/> 
-        This service returns all available track/album data as a JSON result. Please provide a Bandcamp track or album URL by adding ?url=[link], <br/> 
-        e.g. <a href='/wp-content/plugins/fullwidth-audio-player/inc/bandcampScraper.php?url=https://abdominal.bandcamp.com/track/broken'>?url=https://abdominal.bandcamp.com/track/broken</a>";
+        echo "<h1>Welcome to the Bandcamp scraper. </h1> 
+        <p>This service returns all available track/album data as a JSON result. Please provide a Bandcamp track or album URL by adding ?url=[link], </p>
+        <p>e.g. <a href='/wp-content/plugins/fullwidth-audio-player/inc/bandcampScraper.php?url=https://abdominal.bandcamp.com/track/broken'>?url=https://abdominal.bandcamp.com/track/broken</a></p>";
         http_response_code(400);
         return;
     } 
     
-    // download the html
-    $pageData= @file_get_contents($url);
-    if ($pageData === false){
+    $bc = wp_remote_get($url);
+    if (!$bc || is_wp_error($bc)){
         echo "The url '" . $url . "' could not be found.";
         http_response_code(404);
         return;
     }
+    $pageData = wp_remote_retrieve_body($bc);
     
     //find the variable TralbumData, as it basically already is a JSON var
     // with everything we need already there.
@@ -24,7 +26,9 @@
     $indexOfStartOfBandcamp =  strpos( strtolower($pageData), "bandcamp");
 
     if ( ! $indexOfStartOfBandcamp || ! $indexOfStartOfData) {
-        echo "The URL '" . $url . "' is not a valid bootcamp url";
+        echo "<h1>The URL '" . $url . "' is not a valid bootcamp url</h1><h2>Data Returned:</h2>";
+        echo print_r($bc);
+        echo $pageData;
         http_response_code(400);
         return;
     } 
@@ -47,8 +51,11 @@
         // we need to wrap the phrase before the colon with quotes.
         // TODO: Make this less hacky.
         if (strpos($line, ":")){
+            //get rid of any spaces before colon
             $line = preg_replace('/ :/', ':', $line, 1);
+            //add closing quote
             $line = preg_replace('/:/', '":', $line, 1);
+            //add opening quote
             $line = "\"" . $line;
         }
         //if the line contains an end of line quote, then remove it. 
